@@ -82,6 +82,9 @@ export async function restoreLastUser() {
  * Get the currently active user.
  */
 export function getActiveUser() {
+  if (typeof window === "undefined") {
+    return; // Return null if running on the server
+  }
   const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
   return users.find((u: any) => u.isActive) || null;
 }
