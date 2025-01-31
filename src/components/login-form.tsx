@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import supabase from "@/utils/supebase/client";
 import { redirect } from "next/navigation";
+import { signIn } from "@/lib/auth";
 
 interface signinT {
   email: string;
@@ -47,27 +48,12 @@ export function LoginForm({
       console.log("clicked");
       return;
     }
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: signinData.email,
-      password: signinData.password,
-    });
-    if (error) {
-      toast({
-        title: `Something went wrong`,
-        variant: "destructive",
-      });
-    }
-
-    if (data.session) {
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      users.push({ email: signinData.email, session: data.session });
-      localStorage.setItem("users", JSON.stringify(users));
-    }
+    const { user } = await signIn(signinData.email, signinData.password);
 
     // if (typeof data == "object") {
     //   redirect("/");
     // }
-    console.log("data and error", data, error);
+    console.log("data and error", user);
   };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
