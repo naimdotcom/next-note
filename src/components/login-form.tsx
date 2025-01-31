@@ -10,6 +10,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+interface signinT {
+  username: string;
+  email: string;
+  password: string;
+}
+
 export function LoginForm({
   className,
   ...props
@@ -49,9 +55,6 @@ export function LoginForm({
               </div>
               <Button type="submit" className="w-full">
                 Login
-              </Button>
-              <Button variant="outline" className="w-full">
-                Login with Google
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
