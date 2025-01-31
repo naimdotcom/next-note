@@ -1,5 +1,3 @@
-"use client";
-
 import ShowNotes from "@/components/common/ShowNotes";
 import React from "react";
 

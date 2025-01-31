@@ -111,7 +111,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
     fetchUser();
   }, [router]);
-  console.log("user and active", user, activeUser, pathname);
+  // console.log("user and active", user, activeUser, pathname);s
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
