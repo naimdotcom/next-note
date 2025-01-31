@@ -22,7 +22,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import supabase from "@/utils/supebase/client";
 import { getActiveUser, getLoggedinUserIndex } from "@/lib/auth";
 import { toast } from "@/hooks/use-toast";
@@ -85,6 +85,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [user, setUser] = React.useState<any>({});
   const activeUser = getActiveUser();
   const router = useRouter();
+  const pathname = usePathname();
 
   React.useEffect(() => {
     const fetchUser = async () => {
@@ -105,13 +106,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           return;
         }
         setUser(data.user); // Set user details
-        router.push(`/u/${userIndex}`); // Redirect to home if authenticated
       }
     };
 
     fetchUser();
   }, [router]);
-  console.log("user and active", user, activeUser);
+  console.log("user and active", user, activeUser, pathname);
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
