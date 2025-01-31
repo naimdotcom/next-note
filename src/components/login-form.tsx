@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,9 +10,12 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import supabase from "@/utils/supebase/client";
+import { redirect } from "next/navigation";
 
 interface signinT {
-  username: string;
   email: string;
   password: string;
 }
@@ -20,17 +24,62 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const [signinData, setSigninData] = useState<signinT>({
+    email: "",
+    password: "",
+  });
+  const { toast } = useToast();
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSigninData((prev) => ({
+      ...prev,
+      [e.target.id]: e.target.value,
+    }));
+  };
+
+  const handleSignIn = async (e: any) => {
+    e.preventDefault();
+
+    if (!signinData.email || !signinData.password) {
+      toast({
+        title: "All fields require",
+        description: "Check if there any fields that you haven't fullfilled",
+      });
+      console.log("clicked");
+      return;
+    }
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: signinData.email,
+      password: signinData.password,
+    });
+    if (error) {
+      toast({
+        title: `Something went wrong`,
+        variant: "destructive",
+      });
+    }
+
+    if (data.session) {
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      users.push({ email: signinData.email, session: data.session });
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+
+    // if (typeof data == "object") {
+    //   redirect("/");
+    // }
+    console.log("data and error", data, error);
+  };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-2xl">Sign-in</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Enter your email below to sign-in to your account
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSignIn}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
@@ -39,22 +88,35 @@ export function LoginForm({
                   type="email"
                   placeholder="m@example.com"
                   required
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                   <a
-                    href="#"
+                    // href="#"
+                    onClick={() => {
+                      toast({
+                        title: "Not Available now....",
+                        description: "forget password functionality not added.",
+                        variant: "destructive",
+                      });
+                    }}
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  onChange={handleInputChange}
+                />
               </div>
               <Button type="submit" className="w-full">
-                Login
+                Signin
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
