@@ -7,6 +7,8 @@ type Props = {};
 export default function page({}: Props) {
   const [value, setValue] = useState<Content>("");
 
+  console.log(value);
+
   return (
     <>
       <div>
