@@ -27,6 +27,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+
+import { useRouter } from "next/navigation";
+import supabase from "@/utils/supebase/client";
+import { restoreLastUser } from "@/lib/auth";
 // const data = ;
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [data, setData] = React.useState({
@@ -83,23 +87,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       // },
     ],
   });
-  React.useEffect(() => {
-    fetch("https://dummyjson.com/users/1")
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res);
+  const [user, setUser] = React.useState({});
+  const lastLoggedInUserEmail = restoreLastUser();
+  const router = useRouter();
 
-        setData((prev) => ({
-          ...prev,
-          user: {
-            ...prev.user,
-            name: res?.username,
-            email: res?.email,
-            avatar: res?.image,
-          },
-        }));
-      });
-  }, []);
+  React.useEffect(() => {
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error || !data?.user) {
+        router.push("/signin"); // Redirect to login if not authenticated
+      } else {
+        setUser(data.user); // Set user details
+        router.push(`/u/23`); // Redirect to home if authenticated
+      }
+    };
+
+    fetchUser();
+    console.log(user);
+  }, [router]);
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>

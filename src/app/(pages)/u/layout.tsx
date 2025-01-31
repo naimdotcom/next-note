@@ -1,3 +1,4 @@
+"use client";
 import type { Metadata } from "next";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
@@ -14,10 +15,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-export const metadata: Metadata = {
-  title: "notes of user",
-  description: "",
-};
 
 export default function RootLayout({
   children,
