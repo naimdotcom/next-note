@@ -1,5 +1,6 @@
 import { toast } from "@/hooks/use-toast";
 import supabase from "@/utils/supebase/client";
+import { redirect } from "next/navigation";
 
 // Storage keys
 const USERS_KEY = "s_RT_note_users";
@@ -60,7 +61,6 @@ export async function switchUser(email: string) {
     // Save updated users list
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
     localStorage.setItem(ACTIVE_USER_KEY, email);
-
     return user.email;
   }
 
@@ -94,6 +94,16 @@ export function getAllUsers() {
 }
 
 /**
+ * get user index number from local storage
+ *
+ */
+export function getLoggedinUserIndex(email: string | null) {
+  const storageUser: [] = JSON.parse(
+    localStorage.getItem("s_RT_note_users") || "[]"
+  );
+  return storageUser.findIndex((u: any) => u.email == email);
+}
+/**
  * Log out the active user.
  */
 export async function logoutUser() {
@@ -113,4 +123,5 @@ export async function logoutUser() {
 
   // Logout from Supabase
   await supabase.auth.signOut();
+  redirect("/signin");
 }

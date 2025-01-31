@@ -12,9 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import supabase from "@/utils/supebase/client";
 import { redirect } from "next/navigation";
-import { signIn } from "@/lib/auth";
+import { getLoggedinUserIndex, signIn } from "@/lib/auth";
 
 interface signinT {
   email: string;
@@ -50,11 +49,23 @@ export function LoginForm({
     }
     const user = await signIn(signinData.email, signinData.password);
 
-    // if (typeof data == "object") {
-    //   redirect("/");
-    // }
-    console.log("data and error", user?.user);
+    if (typeof user?.user == "object") {
+      const userIndex = getLoggedinUserIndex(
+        user.user.email ? user.user.email : ""
+      );
+
+      if (userIndex == -1) {
+        toast({
+          title: "something went wrong",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      redirect(`/u/${userIndex}`);
+    }
   };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>

@@ -2,20 +2,14 @@
 
 import * as React from "react";
 import {
-  BookOpen,
-  Bot,
   Command,
-  Frame,
   LifeBuoy,
   Send,
   Settings2,
   Trash2,
-  SquareTerminal,
   Archive,
 } from "lucide-react";
-
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import {
@@ -30,7 +24,8 @@ import {
 
 import { useRouter } from "next/navigation";
 import supabase from "@/utils/supebase/client";
-import { restoreLastUser } from "@/lib/auth";
+import { getActiveUser, getLoggedinUserIndex } from "@/lib/auth";
+import { toast } from "@/hooks/use-toast";
 // const data = ;
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [data, setData] = React.useState({
@@ -87,8 +82,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       // },
     ],
   });
-  const [user, setUser] = React.useState({});
-  const lastLoggedInUserEmail = restoreLastUser();
+  const [user, setUser] = React.useState<any>({});
+  const activeUser = getActiveUser();
   const router = useRouter();
 
   React.useEffect(() => {
@@ -98,14 +93,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       if (error || !data?.user) {
         router.push("/signin"); // Redirect to login if not authenticated
       } else {
+        const userIndex = getLoggedinUserIndex(
+          data.user.email ? data.user.email : ""
+        );
+
+        if (userIndex == -1) {
+          toast({
+            title: "something went wrong",
+            variant: "destructive",
+          });
+          return;
+        }
         setUser(data.user); // Set user details
-        router.push(`/u/23`); // Redirect to home if authenticated
+        router.push(`/u/${userIndex}`); // Redirect to home if authenticated
       }
     };
 
     fetchUser();
-    console.log(user);
   }, [router]);
+  console.log("user and active", user, activeUser);
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -117,7 +123,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Acme Inc</span>
+                  <span className="truncate font-semibold">Note App</span>
                   <span className="truncate text-xs">Enterprise</span>
                 </div>
               </a>
@@ -131,7 +137,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user?.user_metadata ? user?.user_metadata : {}} />
       </SidebarFooter>
     </Sidebar>
   );
