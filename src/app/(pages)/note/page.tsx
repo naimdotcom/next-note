@@ -10,7 +10,9 @@ export default function page({}: Props) {
   return (
     <>
       <div>
-        <h2>Write Your Notes</h2>
+        <h2 className="text-2xl font-medium pb-5 text-zinc-700">
+          Write Your Notes
+        </h2>
       </div>
       <div>
         <MinimalTiptapEditor
