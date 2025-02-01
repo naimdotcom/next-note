@@ -27,10 +27,10 @@ export default async function ShowNotes({}: Props) {
   if (error) {
     return <p>Error loading notes: {error.message}</p>;
   }
-  console.log(notes);
+  console.log(notes.length);
   return (
     <div>
-      <MasonryLayout>
+      <MasonryLayout length={notes.length}>
         {notes.map((item, i) => (
           <div key={item.id}>
             <NoteCard title={item.title} note={item.note} />

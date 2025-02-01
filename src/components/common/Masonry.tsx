@@ -5,23 +5,24 @@ import Masonry from "react-masonry-css";
 
 interface MasonryLayoutProps {
   children: React.ReactNode;
+  length: number;
 }
 
-const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children }) => {
+const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, length }) => {
   const noteCount = supabase.from("notes").select("*", { count: "exact" });
   const breakpointColumnsObj = {
-    default: 5,
+    default: length < 3 ? length : 3,
     1100: 3,
     700: 2,
-    500: 1,
+    450: 1,
   };
   console.log("noteCount", noteCount);
 
   return (
     <Masonry
       breakpointCols={breakpointColumnsObj}
-      className="flex w-auto -ml-4"
-      columnClassName="pl-4 bg-clip-padding"
+      className="flex -ml-4 "
+      columnClassName="pl-4 bg-clip-paddin"
     >
       {children}
     </Masonry>
