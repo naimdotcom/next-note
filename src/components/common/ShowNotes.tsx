@@ -17,16 +17,17 @@ type Props = {
 };
 
 export default async function ShowNotes({}: Props) {
-  const data = await getUserUID();
+  const userId = await getUserUID();
 
-  const { data: notes, error } = await supabase.from("notes").select("*");
+  const { data: notes, error } = await supabase
+    .from("notes")
+    .select("*")
+    .eq("user_id", userId);
 
   if (error) {
     return <p>Error loading notes: {error.message}</p>;
   }
-
-  console.log(data);
-
+  console.log(notes);
   return (
     <div>
       <MasonryLayout>

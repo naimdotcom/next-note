@@ -7,7 +7,7 @@ interface CardProps {
   note: string;
 }
 
-const NoteCard: React.FC<CardProps> = ({ title, note }, ...props) => {
+const NoteCard: React.FC<CardProps> = ({ title, note }) => {
   const [truncatedNote, setTruncatedNote] = useState<string>(note);
   const noteRef = useRef<HTMLParagraphElement>(null);
 
