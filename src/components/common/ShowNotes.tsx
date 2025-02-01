@@ -27,7 +27,7 @@ export default async function ShowNotes({}: Props) {
   if (error) {
     return <p>Error loading notes: {error.message}</p>;
   }
-  console.log(notes.length);
+  // console.log(notes.length);
   return (
     <div>
       <MasonryLayout length={notes.length}>

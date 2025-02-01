@@ -16,7 +16,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, length }) => {
     700: 2,
     450: 1,
   };
-  console.log("noteCount", noteCount);
+  // console.log("noteCount", noteCount);
 
   return (
     <Masonry
