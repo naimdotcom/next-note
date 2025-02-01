@@ -2,27 +2,23 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 async function createClient() {
-  const cookieStore = await cookies();
+  const cookieStore = await cookies(); // Don't use await, it's not a Promise.
 
-  // Create a server's supabase client with newly configured cookie,
-  // which could be used to maintain user's session
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
+        async getAll() {
           return cookieStore.getAll();
         },
-        setAll(cookiesToSet) {
+        async setAll(cookiesToSet) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
             );
           } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
+            // Ignore errors in Server Components
           }
         },
       },
@@ -30,5 +26,13 @@ async function createClient() {
   );
 }
 
-const supabaseServer = createClient();
-export default supabaseServer;
+// Call this inside a Server Component or Route
+export async function getUserUID() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  console.log("user", user);
+
+  return user?.id || null; // Return UID if available
+}
