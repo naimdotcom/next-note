@@ -10,11 +10,16 @@ interface CardProps {
 }
 
 const NoteCard: React.FC<CardProps> = ({ title, note, id }) => {
-  const [truncatedNote, setTruncatedNote] = useState<string>(note);
+  const [truncatedNote, setTruncatedNote] = useState<string>("");
+  const [isClient, setIsClient] = useState(false);
   const noteRef = useRef<HTMLParagraphElement>(null);
   const router = useRouter();
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+  useEffect(() => {
+    setIsClient(true);
     const truncateText = () => {
       if (noteRef.current) {
         const maxChars = 350; // Adjust this value as needed
@@ -39,13 +44,13 @@ const NoteCard: React.FC<CardProps> = ({ title, note, id }) => {
       }}
     >
       <h2 className="text-xl font-bold mb-2">{title}</h2>
-      <p
-        ref={noteRef}
-        className="text-gray-600 truncated"
-        dangerouslySetInnerHTML={{ __html: truncatedNote }}
-      >
-        {/* {truncatedNote} */}
-      </p>
+      {isClient && (
+        <p
+          ref={noteRef}
+          className="text-gray-600 truncated"
+          dangerouslySetInnerHTML={{ __html: truncatedNote }}
+        />
+      )}
     </div>
   );
 };
