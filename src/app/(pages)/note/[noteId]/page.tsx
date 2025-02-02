@@ -6,13 +6,13 @@ type Props = { params: Promise<{ noteId: string }> };
 
 export default async function page({ params }: Props) {
   const { noteId } = await params;
-  const userId = await getUserUID();
+  // const userId = await getUserUID();
 
-  const { note, error } = await getNoteById(noteId, userId && userId);
-  if (error) {
-    <p>{error.message}</p>;
-  }
+  // const { note, error } = await getNoteById(noteId, userId && userId);
+  // if (error) {
+  //   <p>{error.message}</p>;
+  // }
 
-  // console.log(noteId, note);
+  console.log(noteId);
   return <div>ok</div>;
 }
