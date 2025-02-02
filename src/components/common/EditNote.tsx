@@ -1,18 +1,17 @@
-"use client";
-import { MinimalTiptapEditor } from "@/components/minimal-tiptap";
 import React, { useState } from "react";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
+import { MinimalTiptapEditor } from "../minimal-tiptap";
+import { Button } from "../ui/button";
 import { Content } from "@tiptap/react";
-import supabase from "@/utils/supebase/client";
-import { getActiveUser, getLoggedinUserIndex } from "@/lib/auth";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { useRouter } from "next/router";
 import { toast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { getActiveUser, getLoggedinUserIndex } from "@/lib/auth";
+import supabase from "@/utils/supebase/client";
 
 type Props = {};
 
-export default function page({}: Props) {
+export default function EditNote({}: Props) {
   const [title, setTitle] = useState<string>("");
   const [note, setNote] = useState<Content>("");
   const router = useRouter();
@@ -48,15 +47,8 @@ export default function page({}: Props) {
     const index = getLoggedinUserIndex(activeUser.email);
     router.push(`/u/${index}`);
   };
-  //   console.log("active user", title, note);
-
   return (
-    <>
-      <div>
-        <h2 className="text-2xl font-medium pb-5 text-zinc-700">
-          Write Your Notes
-        </h2>
-      </div>
+    <div>
       <div className="space-y-4">
         <div className="grid w-full gap-1.5">
           <Label htmlFor="message">Title</Label>
@@ -83,6 +75,6 @@ export default function page({}: Props) {
           Save
         </Button>
       </div>
-    </>
+    </div>
   );
 }

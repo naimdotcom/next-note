@@ -1,5 +1,5 @@
 "use client";
-import type { Metadata } from "next";
+
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   Breadcrumb,
@@ -18,10 +18,8 @@ import {
 
 export default function RootLayout({
   children,
-  modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
 }>) {
   return (
     <SidebarProvider>
@@ -47,7 +45,6 @@ export default function RootLayout({
           </div>
         </header>
         <div className="mx-7">{children}</div>
-        <div className="mx-7">{modal}</div>
       </SidebarInset>
     </SidebarProvider>
   );

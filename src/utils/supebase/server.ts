@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-async function createClient() {
+export async function createClient() {
   const cookieStore = await cookies(); // Don't use await, it's not a Promise.
 
   return createServerClient(
@@ -34,4 +34,23 @@ export async function getUserUID() {
   } = await supabase.auth.getUser();
 
   return user?.id || null; // Return UID if available
+}
+
+export async function getNoteById(noteId: string, userId: string | null) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("notes")
+    .select("*")
+    .eq("id", noteId)
+    .eq("user_id", userId);
+
+  if (error) {
+    return {
+      error,
+    };
+  }
+
+  return {
+    note: data[0],
+  }; // Return UID if available
 }

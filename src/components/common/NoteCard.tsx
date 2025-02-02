@@ -1,15 +1,18 @@
 "use client";
+import { useRouter } from "next/navigation";
 import type React from "react";
 import { useRef, useState, useEffect } from "react";
 
 interface CardProps {
   title: string;
   note: string;
+  id: string;
 }
 
-const NoteCard: React.FC<CardProps> = ({ title, note }) => {
+const NoteCard: React.FC<CardProps> = ({ title, note, id }) => {
   const [truncatedNote, setTruncatedNote] = useState<string>(note);
   const noteRef = useRef<HTMLParagraphElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const truncateText = () => {
@@ -31,7 +34,9 @@ const NoteCard: React.FC<CardProps> = ({ title, note }) => {
   return (
     <div
       className="bg-white rounded-lg shadow-md p-4 overflow-hidden my-4"
-      onClick={() => {}}
+      onClick={() => {
+        router.push(`/note/${id}`);
+      }}
     >
       <h2 className="text-xl font-bold mb-2">{title}</h2>
       <p

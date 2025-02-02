@@ -33,7 +33,7 @@ export default async function ShowNotes({}: Props) {
       <MasonryLayout length={notes.length}>
         {notes.map((item, i) => (
           <div key={item.id}>
-            <NoteCard title={item.title} note={item.note} />
+            <NoteCard title={item.title} note={item.note} id={item.id} />
           </div>
         ))}
       </MasonryLayout>
