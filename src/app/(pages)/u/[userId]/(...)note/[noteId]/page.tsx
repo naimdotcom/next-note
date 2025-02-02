@@ -7,6 +7,6 @@ export default function page({ params }: { params: { noteId: string } }) {
   //   return notFound();
   // }
   console.log("interception");
-
+  // intercepting solved...
   return <div>intercepting</div>;
 }
