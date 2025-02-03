@@ -74,8 +74,11 @@ export const MinimalTiptapEditor = React.forwardRef<
   const editor = useMinimalTiptapEditor({
     value,
     onUpdate: onChange,
+
     ...props,
   });
+
+  editor?.commands.scrollIntoView();
 
   if (!editor) {
     return null;

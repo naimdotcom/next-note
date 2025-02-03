@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { useRef, useState, useEffect } from "react";
+import parse from "html-react-parser";
 
 interface CardProps {
   title: string;
@@ -10,16 +11,12 @@ interface CardProps {
 }
 
 const NoteCard: React.FC<CardProps> = ({ title, note, id }) => {
-  const [truncatedNote, setTruncatedNote] = useState<string>("");
-  const [isClient, setIsClient] = useState(false);
+  const [truncatedNote, setTruncatedNote] = useState<string>(note);
+
   const noteRef = useRef<HTMLParagraphElement>(null);
   const router = useRouter();
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-  useEffect(() => {
-    setIsClient(true);
     const truncateText = () => {
       if (noteRef.current) {
         const maxChars = 350; // Adjust this value as needed
@@ -33,7 +30,10 @@ const NoteCard: React.FC<CardProps> = ({ title, note, id }) => {
 
     truncateText();
     window.addEventListener("resize", truncateText);
-    return () => window.removeEventListener("resize", truncateText);
+    return () => {
+      window.removeEventListener("resize", truncateText);
+      // console.clear();
+    };
   }, [note]);
 
   return (
@@ -44,13 +44,14 @@ const NoteCard: React.FC<CardProps> = ({ title, note, id }) => {
       }}
     >
       <h2 className="text-xl font-bold mb-2">{title}</h2>
-      {isClient && (
-        <p
-          ref={noteRef}
-          className="text-gray-600 truncated"
-          dangerouslySetInnerHTML={{ __html: truncatedNote }}
-        />
-      )}
+
+      <div
+        ref={noteRef}
+        className="text-gray-600 truncated"
+        // dangerouslySetInnerHTML={{ __html: truncatedNote }}
+      >
+        {parse(truncatedNote)}
+      </div>
     </div>
   );
 };
